@@ -9,11 +9,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private String url = "http://api.themoviedb.org/3/discover/movie?";
+    List<Movie> movieList = new ArrayList<Movie>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
-
+//                        Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
+                        parseJson(response);
                     }
                 }, new Response.ErrorListener() {
 
@@ -37,7 +43,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         AppController.getInstance().addToRequestQueue(jsonObjReq);
 
+    }
+
+    void parseJson(JSONObject response){
+
+        try {
+            JSONArray results = response.getJSONArray("results");
+
+            for(int i = 0 ; i < results.length();i++){
+                JSONObject currentMovie = results.getJSONObject(i);
+                int id = currentMovie.getInt("id");
+                String title = currentMovie.getString("title");
+                String overview = currentMovie.getString("overview");
+                String poster_path = "http://image.tmdb.org/t/p/original/" + currentMovie.getString("poster_path");
+                String backdrop_path = "http://image.tmdb.org/t/p/original/" + currentMovie.getString("backdrop_path");
+                String release_date = currentMovie.getString("release_date");
+                String vote_average = currentMovie.getString("vote_average");
+
+                Movie m = new Movie(id,title,overview,poster_path,backdrop_path,release_date,vote_average);
+                Toast.makeText(getApplicationContext(),m.title.toString(),Toast.LENGTH_SHORT).show();
+                movieList.add(m);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
