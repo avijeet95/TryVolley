@@ -5,7 +5,7 @@ package com.avijeet95.android.tryvolley;
  */
 public class Movie {
     private int id;
-    public String title ;
+    private String title ;
     private String overview ;
     private String poster_path;
     private String backdrop_path;
