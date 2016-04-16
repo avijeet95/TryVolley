@@ -24,5 +24,8 @@ public class Movie {
         this.release_date = release_date;
         this.vote_average = vote_average;
     }
+    public String getPosterUrl(){
+        return poster_path;
+    }
 
 }
