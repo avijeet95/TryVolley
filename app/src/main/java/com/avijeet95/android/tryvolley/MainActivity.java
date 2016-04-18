@@ -8,7 +8,6 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
@@ -22,15 +21,14 @@ public class MainActivity extends AppCompatActivity {
 
     private String url = "http://api.themoviedb.org/3/discover/movie?";
     public List<Movie> movieList = new ArrayList<Movie>();
+    private GridView gridView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageLoader imageLoader = new ImageLoader(AppController.getInstance().getRequestQueue(), new LruBitmapCache(
-                LruBitmapCache.getDefaultLruCacheSize()));
-        final GridView gridView = (GridView) findViewById(R.id.gridview);
-        gridView.setAdapter(new ImageAdapter(this,movieList));
+        gridView = (GridView) findViewById(R.id.gridview);
         //Volley Response
         String requestUrl = url + "api_key=" + Tags.API_KEY + "&sort_by=popularity.desc";
         final JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -67,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 int id = currentMovie.getInt("id");
                 String title = currentMovie.getString("title");
                 String overview = currentMovie.getString("overview");
-                String poster_path = "http://image.tmdb.org/t/p/original/" + currentMovie.getString("poster_path");
-                String backdrop_path = "http://image.tmdb.org/t/p/original/" + currentMovie.getString("backdrop_path");
+                String poster_path = "http://image.tmdb.org/t/p/original" + currentMovie.getString("poster_path");
+                String backdrop_path = "http://image.tmdb.org/t/p/original" + currentMovie.getString("backdrop_path");
                 String release_date = currentMovie.getString("release_date");
                 String vote_average = currentMovie.getString("vote_average");
 
@@ -77,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
                 movieList.add(m);
 
             }
+
+            gridView.setAdapter(new ImageAdapter(this,movieList));
         } catch (JSONException e) {
             e.printStackTrace();
         }
