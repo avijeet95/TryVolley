@@ -1,7 +1,11 @@
 package com.avijeet95.android.tryvolley;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         AppController.getInstance().addToRequestQueue(jsonObjReq);
 
+
     }
     //Converts Json Reponse to useful Java Objects
     void parseJson(JSONObject response){
@@ -77,8 +82,29 @@ public class MainActivity extends AppCompatActivity {
             }
 
             gridView.setAdapter(new ImageAdapter(this,movieList));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+    private void gridListener(){
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.v("MyApp", movieList.get(position).getId() + " " + movieList.get(position).getTitle());
+                Intent intent = new Intent(MainActivity.this, MovieData.class );
+                intent.putExtra("movieID", movieList.get(position).getId());
+                intent.putExtra("movieTitle", movieList.get(position).getTitle());
+                intent.putExtra("moviePoster", movieList.get(position).getPosterUrl());
+                intent.putExtra("movieSynopsis", movieList.get(position).getOverview());
+                intent.putExtra("movieUR", movieList.get(position).getVoteAverage());
+                intent.putExtra("movieRD", movieList.get(position).getReleaseDate());
+                intent.putExtra("movieBackdrop", movieList.get(position).getBackdropUrl());
+                startActivity(intent);
+            }
+        });
+    }
+
+
 }

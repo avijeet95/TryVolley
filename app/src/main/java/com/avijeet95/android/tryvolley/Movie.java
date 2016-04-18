@@ -24,8 +24,21 @@ public class Movie {
         this.release_date = release_date;
         this.vote_average = vote_average;
     }
+    public int getId() { return id; }
+    public String getTitle(){
+        return title;
+    }
+
+    public String getOverview(){
+        return overview;
+    }
+
+    public String getBackdropUrl(){
+        return backdrop_path;
+    }
     public String getPosterUrl(){
         return poster_path;
     }
-
+    public String getReleaseDate() { return release_date; }
+    public String getVoteAverage() { return vote_average ;}
 }
